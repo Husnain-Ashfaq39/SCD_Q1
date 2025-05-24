@@ -153,38 +153,38 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       
-      # Build and push Docker images (replace 'yourusername' with your Docker Hub username)
+      # Build and push Docker images (replace 'husnain239' with your Docker Hub username)
       - name: Build and push Auth Service
         uses: docker/build-push-action@v4
         with:
           context: ./auth-service
           push: true
-          tags: yourusername/auth-service:latest, yourusername/auth-service:${{ github.sha }}
+          tags: husnain239/auth-service:latest, husnain239/auth-service:${{ github.sha }}
       
       - name: Build and push Blog Service
         uses: docker/build-push-action@v4
         with:
           context: ./blog-service
           push: true
-          tags: yourusername/blog-service:latest, yourusername/blog-service:${{ github.sha }}
+          tags: husnain239/blog-service:latest, husnain239/blog-service:${{ github.sha }}
       
       - name: Build and push Comment Service
         uses: docker/build-push-action@v4
         with:
           context: ./comment-service
           push: true
-          tags: yourusername/comment-service:latest, yourusername/comment-service:${{ github.sha }}
+          tags: husnain239/comment-service:latest, husnain239/comment-service:${{ github.sha }}
       
       - name: Build and push Profile Service
         uses: docker/build-push-action@v4
         with:
           context: ./profile-service
           push: true
-          tags: yourusername/profile-service:latest, yourusername/profile-service:${{ github.sha }}
+          tags: husnain239/profile-service:latest, husnain239/profile-service:${{ github.sha }}
       
       - name: Build and push API Gateway
         uses: docker/build-push-action@v4
         with:
           context: ./api-gateway
           push: true
-          tags: yourusername/api-gateway:latest, yourusername/api-gateway:${{ github.sha }} 
+          tags: husnain239/api-gateway:latest, husnain239/api-gateway:${{ github.sha }} 
