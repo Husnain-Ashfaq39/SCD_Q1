@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'auth-service/package.json'
+          cache-dependency-path: './auth-service/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -48,7 +48,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'blog-service/package.json'
+          cache-dependency-path: './blog-service/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -74,7 +74,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'comment-service/package.json'
+          cache-dependency-path: './comment-service/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -100,7 +100,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'profile-service/package.json'
+          cache-dependency-path: './profile-service/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -126,7 +126,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'api-gateway/package.json'
+          cache-dependency-path: './api-gateway/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
