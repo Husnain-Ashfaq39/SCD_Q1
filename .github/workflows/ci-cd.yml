@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./microservices/auth-service
+        working-directory: ./auth-service
     
     steps:
       - uses: actions/checkout@v3
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: './microservices/auth-service/package-lock.json'
+          cache-dependency-path: './auth-service/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./microservices/blog-service
+        working-directory: ./blog-service
     
     steps:
       - uses: actions/checkout@v3
@@ -48,7 +48,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: './microservices/blog-service/package-lock.json'
+          cache-dependency-path: './blog-service/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./microservices/comment-service
+        working-directory: ./comment-service
     
     steps:
       - uses: actions/checkout@v3
@@ -74,7 +74,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: './microservices/comment-service/package-lock.json'
+          cache-dependency-path: './comment-service/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -90,7 +90,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./microservices/profile-service
+        working-directory: ./profile-service
     
     steps:
       - uses: actions/checkout@v3
@@ -100,7 +100,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: './microservices/profile-service/package-lock.json'
+          cache-dependency-path: './profile-service/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -116,7 +116,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./microservices/api-gateway
+        working-directory: ./api-gateway
     
     steps:
       - uses: actions/checkout@v3
@@ -126,7 +126,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: './microservices/api-gateway/package-lock.json'
+          cache-dependency-path: './api-gateway/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -156,34 +156,34 @@ jobs:
       - name: Build and push Auth Service
         uses: docker/build-push-action@v4
         with:
-          context: ./microservices/auth-service
+          context: ./auth-service
           push: true
           tags: yourusername/auth-service:latest, yourusername/auth-service:${{ github.sha }}
       
       - name: Build and push Blog Service
         uses: docker/build-push-action@v4
         with:
-          context: ./microservices/blog-service
+          context: ./blog-service
           push: true
           tags: yourusername/blog-service:latest, yourusername/blog-service:${{ github.sha }}
       
       - name: Build and push Comment Service
         uses: docker/build-push-action@v4
         with:
-          context: ./microservices/comment-service
+          context: ./comment-service
           push: true
           tags: yourusername/comment-service:latest, yourusername/comment-service:${{ github.sha }}
       
       - name: Build and push Profile Service
         uses: docker/build-push-action@v4
         with:
-          context: ./microservices/profile-service
+          context: ./profile-service
           push: true
           tags: yourusername/profile-service:latest, yourusername/profile-service:${{ github.sha }}
       
       - name: Build and push API Gateway
         uses: docker/build-push-action@v4
         with:
-          context: ./microservices/api-gateway
+          context: ./api-gateway
           push: true
           tags: yourusername/api-gateway:latest, yourusername/api-gateway:${{ github.sha }} 
