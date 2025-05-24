@@ -3,7 +3,7 @@ const { getProfile, updateProfile, deleteProfile } = require('../controllers/pro
 const router = express.Router();
 
 router.get('/:userId', getProfile);
-router.post('/', updateProfile);
+router.put('/', updateProfile);
 router.delete('/', deleteProfile);
 
 module.exports = router; 
