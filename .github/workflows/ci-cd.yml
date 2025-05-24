@@ -1,0 +1,189 @@
+name: Microservices CI/CD
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  # Auth Service CI
+  auth-service-ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./microservices/auth-service
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './microservices/auth-service/package-lock.json'
+      
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test
+        
+      - name: Build Docker image
+        run: docker build -t auth-service:${{ github.sha }} .
+  
+  # Blog Service CI
+  blog-service-ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./microservices/blog-service
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './microservices/blog-service/package-lock.json'
+      
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test
+        
+      - name: Build Docker image
+        run: docker build -t blog-service:${{ github.sha }} .
+  
+  # Comment Service CI
+  comment-service-ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./microservices/comment-service
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './microservices/comment-service/package-lock.json'
+      
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test
+        
+      - name: Build Docker image
+        run: docker build -t comment-service:${{ github.sha }} .
+  
+  # Profile Service CI
+  profile-service-ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./microservices/profile-service
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './microservices/profile-service/package-lock.json'
+      
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test
+        
+      - name: Build Docker image
+        run: docker build -t profile-service:${{ github.sha }} .
+  
+  # API Gateway CI
+  api-gateway-ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./microservices/api-gateway
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './microservices/api-gateway/package-lock.json'
+      
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test
+        
+      - name: Build Docker image
+        run: docker build -t api-gateway:${{ github.sha }} .
+
+  # Deploy (only on main/master branch)
+  deploy:
+    needs: [auth-service-ci, blog-service-ci, comment-service-ci, profile-service-ci, api-gateway-ci]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      
+      # Build and push Docker images (replace 'yourusername' with your Docker Hub username)
+      - name: Build and push Auth Service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./microservices/auth-service
+          push: true
+          tags: yourusername/auth-service:latest, yourusername/auth-service:${{ github.sha }}
+      
+      - name: Build and push Blog Service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./microservices/blog-service
+          push: true
+          tags: yourusername/blog-service:latest, yourusername/blog-service:${{ github.sha }}
+      
+      - name: Build and push Comment Service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./microservices/comment-service
+          push: true
+          tags: yourusername/comment-service:latest, yourusername/comment-service:${{ github.sha }}
+      
+      - name: Build and push Profile Service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./microservices/profile-service
+          push: true
+          tags: yourusername/profile-service:latest, yourusername/profile-service:${{ github.sha }}
+      
+      - name: Build and push API Gateway
+        uses: docker/build-push-action@v4
+        with:
+          context: ./microservices/api-gateway
+          push: true
+          tags: yourusername/api-gateway:latest, yourusername/api-gateway:${{ github.sha }} 

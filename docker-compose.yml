@@ -1,0 +1,135 @@
+version: '3'
+
+services:
+  # Authentication Service and Database
+  auth-db:
+    image: mongo:latest
+    container_name: auth-db
+    volumes:
+      - auth-db-data:/data/db
+    networks:
+      - microservices-network
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MONGO_URI=mongodb://auth-db:27017/auth-service
+      - JWT_SECRET=your_jwt_secret_key
+    depends_on:
+      - auth-db
+    networks:
+      - microservices-network
+
+  # Blog Service and Database
+  blog-db:
+    image: mongo:latest
+    container_name: blog-db
+    volumes:
+      - blog-db-data:/data/db
+    networks:
+      - microservices-network
+
+  blog-service:
+    build: ./blog-service
+    container_name: blog-service
+    restart: always
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - MONGO_URI=mongodb://blog-db:27017/blog-service
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - COMMENT_SERVICE_URL=http://comment-service:3003
+    depends_on:
+      - blog-db
+      - auth-service
+    networks:
+      - microservices-network
+
+  # Comment Service and Database
+  comment-db:
+    image: mongo:latest
+    container_name: comment-db
+    volumes:
+      - comment-db-data:/data/db
+    networks:
+      - microservices-network
+
+  comment-service:
+    build: ./comment-service
+    container_name: comment-service
+    restart: always
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+      - MONGO_URI=mongodb://comment-db:27017/comment-service
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - BLOG_SERVICE_URL=http://blog-service:3002
+    depends_on:
+      - comment-db
+      - auth-service
+      - blog-service
+    networks:
+      - microservices-network
+
+  # Profile Service and Database
+  profile-db:
+    image: mongo:latest
+    container_name: profile-db
+    volumes:
+      - profile-db-data:/data/db
+    networks:
+      - microservices-network
+
+  profile-service:
+    build: ./profile-service
+    container_name: profile-service
+    restart: always
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - MONGO_URI=mongodb://profile-db:27017/profile-service
+      - AUTH_SERVICE_URL=http://auth-service:3001
+    depends_on:
+      - profile-db
+      - auth-service
+    networks:
+      - microservices-network
+
+  # API Gateway
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - BLOG_SERVICE_URL=http://blog-service:3002
+      - COMMENT_SERVICE_URL=http://comment-service:3003
+      - PROFILE_SERVICE_URL=http://profile-service:3004
+    depends_on:
+      - auth-service
+      - blog-service
+      - comment-service
+      - profile-service
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    driver: bridge
+
+volumes:
+  auth-db-data:
+  blog-db-data:
+  comment-db-data:
+  profile-db-data: 
